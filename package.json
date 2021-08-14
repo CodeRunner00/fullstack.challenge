@@ -47,5 +47,8 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/react-select": "^4.0.17",
+    "react-select": "^4.3.1"
+  }
 }

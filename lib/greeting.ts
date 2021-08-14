@@ -3,6 +3,7 @@
  */
 
 const greeting = (hour: number): string => {
+  console.log('new hour !', hour)
   if (hour < 6) {
     return 'Good night'
   } else if (hour < 12) {

@@ -46,9 +46,13 @@ const getUpdatedAccount = async (account: Account): Promise<Account> => {
 
   count++
   // Throw a mocked error every three requests
-  if (!(count % 3)) {
-    count = 0
-    throw new Error('Unexpected error')
+  try {
+    if (!(count % 3)) {
+      count = 0
+      throw new Error('Account did not update!')
+    }
+  } catch (err) {
+    // alert(err)
   }
 
   return {
