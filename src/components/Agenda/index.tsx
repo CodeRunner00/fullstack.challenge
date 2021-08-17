@@ -7,7 +7,7 @@ import greeting from 'lib/greeting'
 import Calendar from 'src/models/Calendar'
 import Event from 'src/models/Event'
 import AccountContext from 'src/context/accountContext'
-
+import DepartmentView from './DepartmentView'
 import List from './List'
 import EventCell from './EventCell'
 
@@ -41,9 +41,9 @@ const Agenda = (): ReactElement => {
 
   // const [selectOption, setSelectOption] = useState<string>('all')
   const [agendaItems, setAgendaItems] = useState<AgendaItem[]>(events)
+  const [dashboardView, setDepartmentView] = useState<boolean>(false)
 
-  console.log(DateTime.local().zoneName)
-  const currentHour = DateTime.local().setZone('America/New_York').hour
+  const currentHour = DateTime.local().hour
   const title = useMemo(() => greeting(currentHour), [currentHour])
   let options = account.calendars.map((cal, idx) => {
     return { label: `Calendar #${idx + 1}`, value: cal.id }
@@ -51,7 +51,6 @@ const Agenda = (): ReactElement => {
   options = [...options, { label: 'All Calendars', value: 'all' }]
 
   const handleCalendarSelection = (selection: any) => {
-    console.log('handleCalendar selction ', selection)
     if (selection.value === 'all') {
       setAgendaItems(events)
     } else {
@@ -71,7 +70,6 @@ const Agenda = (): ReactElement => {
 
   const customStyles = {
     option: (provided: any, state: any) => {
-      console.log('state is ', state)
       return {
         ...provided,
         zIndex: '10',
@@ -88,11 +86,22 @@ const Agenda = (): ReactElement => {
       zIndex: 100,
       borderRadius: '5px',
     }),
-    control: (styles: any) => ({ ...styles, backgroundColor: 'white' }),
-    singleValue: (provided: any, state: { isDisabled: boolean }) => {
+    control: (styles: any) => ({
+      ...styles,
+      backgroundColor: 'white',
+      marginTop: '20px',
+      marginBottom: '20px',
+      marginRight: '16px',
+      marginLeft: '16px',
+    }),
+    singleValue: (provided: any, state: any) => {
       const opacity = state.isDisabled ? 0.5 : 1
       return { ...provided, opacity }
     },
+  }
+
+  const handleDepartmentView = () => {
+    setDepartmentView((prev) => !prev)
   }
 
   return (
@@ -100,19 +109,27 @@ const Agenda = (): ReactElement => {
       <div className={style.container}>
         <div className={style.header}>
           <span className={style.title}>{title}</span>
-          <Select
-            defaultValue={options[3]}
-            options={options}
-            onChange={handleCalendarSelection}
-            styles={customStyles}
-          />
+          <button className={style.button} onClick={handleDepartmentView}>
+            Toggle Department View
+          </button>
         </div>
-
-        <List>
-          {agendaItems.map(({ calendar, event }) => (
-            <EventCell key={event.id} calendar={calendar} event={event} />
-          ))}
-        </List>
+        {!dashboardView ? (
+          <>
+            <Select
+              defaultValue={options[3]}
+              options={options}
+              onChange={handleCalendarSelection}
+              styles={customStyles}
+            />
+            <List>
+              {agendaItems.map(({ calendar, event }) => (
+                <EventCell key={event.id} calendar={calendar} event={event} />
+              ))}
+            </List>
+          </>
+        ) : (
+          <DepartmentView events={events} />
+        )}
       </div>
     </div>
   )
