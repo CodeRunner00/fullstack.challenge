@@ -52,7 +52,7 @@ const getUpdatedAccount = async (account: Account): Promise<Account> => {
       throw new Error('Account did not update!')
     }
   } catch (err) {
-    // alert(err)
+    alert(err)
   }
 
   return {

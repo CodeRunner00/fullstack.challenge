@@ -49,7 +49,7 @@ const Agenda = (): ReactElement => {
     return { label: `Calendar #${idx + 1}`, value: cal.id }
   })
   options = [...options, { label: 'All Calendars', value: 'all' }]
-
+  const [calendarSelection, setCalendarSelection] = useState(options[3])
   const handleCalendarSelection = (selection: any) => {
     if (selection.value === 'all') {
       setAgendaItems(events)
@@ -60,6 +60,7 @@ const Agenda = (): ReactElement => {
       console.log('New events ', newEvents)
       setAgendaItems(newEvents)
     }
+    setCalendarSelection(selection)
   }
 
   const getColor = (id: string) => {
@@ -116,7 +117,7 @@ const Agenda = (): ReactElement => {
         {!dashboardView ? (
           <>
             <Select
-              defaultValue={options[3]}
+              value={calendarSelection}
               options={options}
               onChange={handleCalendarSelection}
               styles={customStyles}
